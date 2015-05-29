@@ -816,7 +816,7 @@ public class ImageSDCardCache extends PreloadDataCache<String, String> {
                 String savePath = null;
                 InputStream stream = null;
                 try {
-                    stream = ImageUtils.getInputStreamFromUrl(key, httpReadTimeOut, requestProperties);
+                    stream = ImageUtils.getInputStreamFromUrl(getContext() ,key, httpReadTimeOut, requestProperties);
                 } catch (Exception e) {
                     Log.e(TAG, new StringBuilder().append("get image exception, imageUrl is:").append(key).toString(),
                             e);

@@ -3,16 +3,16 @@ package cn.trinea.android.common.util;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Map;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 
 /**
  * ImageUtils
@@ -119,8 +119,8 @@ public class ImageUtils {
      * @return
      * @see ImageUtils#getInputStreamFromUrl(String, int, boolean)
      */
-    public static InputStream getInputStreamFromUrl(String imageUrl, int readTimeOutMillis) {
-        return getInputStreamFromUrl(imageUrl, readTimeOutMillis, null);
+    public static InputStream getInputStreamFromUrl(Context context, String imageUrl, int readTimeOutMillis) {
+        return getInputStreamFromUrl(context, imageUrl, readTimeOutMillis, null);
     }
 
     /**
@@ -133,20 +133,19 @@ public class ImageUtils {
      * @throws MalformedURLException
      * @throws IOException
      */
-    public static InputStream getInputStreamFromUrl(String imageUrl, int readTimeOutMillis,
+    public static InputStream getInputStreamFromUrl(Context context, String imageUrl, int readTimeOutMillis,
             Map<String, String> requestProperties) {
         InputStream stream = null;
         try {
-            URL url = new URL(imageUrl);
-            HttpURLConnection con = (HttpURLConnection)url.openConnection();
-            HttpUtils.setURLConnection(requestProperties, con);
-            if (readTimeOutMillis > 0) {
-                con.setReadTimeout(readTimeOutMillis);
-            }
-            stream = con.getInputStream();
-        } catch (MalformedURLException e) {
-            closeInputStream(stream);
-            throw new RuntimeException("MalformedURLException occurred. ", e);
+//            URL url = new URL(imageUrl);
+//            HttpURLConnection con = (HttpURLConnection)url.openConnection();
+//            HttpUtils.setURLConnection(requestProperties, con);
+//            if (readTimeOutMillis > 0) {
+//                con.setReadTimeout(readTimeOutMillis);
+//            }
+//            stream = con.getInputStream();
+        	Uri uri = Uri.parse(imageUrl);        
+        	stream = context.getContentResolver().openInputStream(uri);        	
         } catch (IOException e) {
             closeInputStream(stream);
             throw new RuntimeException("IOException occurred. ", e);
@@ -162,8 +161,8 @@ public class ImageUtils {
      * @return
      * @see ImageUtils#getDrawableFromUrl(String, int, boolean)
      */
-    public static Drawable getDrawableFromUrl(String imageUrl, int readTimeOutMillis) {
-        return getDrawableFromUrl(imageUrl, readTimeOutMillis, null);
+    public static Drawable getDrawableFromUrl(Context context, String imageUrl, int readTimeOutMillis) {
+        return getDrawableFromUrl(context, imageUrl, readTimeOutMillis, null);
     }
 
     /**
@@ -174,9 +173,9 @@ public class ImageUtils {
      * @param requestProperties http request properties
      * @return
      */
-    public static Drawable getDrawableFromUrl(String imageUrl, int readTimeOutMillis,
+    public static Drawable getDrawableFromUrl(Context context, String imageUrl, int readTimeOutMillis,
             Map<String, String> requestProperties) {
-        InputStream stream = getInputStreamFromUrl(imageUrl, readTimeOutMillis, requestProperties);
+        InputStream stream = getInputStreamFromUrl(context, imageUrl, readTimeOutMillis, requestProperties);
         Drawable d = Drawable.createFromStream(stream, "src");
         closeInputStream(stream);
         return d;
@@ -190,8 +189,8 @@ public class ImageUtils {
      * @return
      * @see ImageUtils#getBitmapFromUrl(String, int, boolean)
      */
-    public static Bitmap getBitmapFromUrl(String imageUrl, int readTimeOut) {
-        return getBitmapFromUrl(imageUrl, readTimeOut, null);
+    public static Bitmap getBitmapFromUrl(Context context, String imageUrl, int readTimeOut) {
+        return getBitmapFromUrl(context, imageUrl, readTimeOut, null);
     }
 
     /**
@@ -201,8 +200,8 @@ public class ImageUtils {
      * @param requestProperties http request properties
      * @return
      */
-    public static Bitmap getBitmapFromUrl(String imageUrl, int readTimeOut, Map<String, String> requestProperties) {
-        InputStream stream = getInputStreamFromUrl(imageUrl, readTimeOut, requestProperties);
+    public static Bitmap getBitmapFromUrl(Context context, String imageUrl, int readTimeOut, Map<String, String> requestProperties) {
+        InputStream stream = getInputStreamFromUrl(context, imageUrl, readTimeOut, requestProperties);
         Bitmap b = BitmapFactory.decodeStream(stream);
         closeInputStream(stream);
         return b;

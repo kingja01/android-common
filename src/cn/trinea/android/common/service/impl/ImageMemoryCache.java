@@ -536,7 +536,7 @@ public class ImageMemoryCache extends PreloadDataCache<String, Bitmap> {
             public CacheObject<Bitmap> onGetData(String key) {
                 Bitmap d = null;
                 try {
-                    d = ImageUtils.getBitmapFromUrl(key, httpReadTimeOut, requestProperties);
+                    d = ImageUtils.getBitmapFromUrl(getContext(), key, httpReadTimeOut, requestProperties);
                 } catch (Exception e) {
                     Log.e(TAG, "get image exception, imageUrl is:" + key, e);
                 }
